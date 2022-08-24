@@ -11,6 +11,10 @@
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="pizza-cart-api-widget.js"></script>
 
+    <style>
+
+    </style>
+
     <script>
         axios
         .get('https://pizza-cart-api.herokuapp.com/api/pizzas')
@@ -20,24 +24,121 @@
         })
     </script>
 
-</head>
 <body>
-    <div x-data="pizzaCartWithAPIWidget" >
-        <h1>Pizzas you can order</h1>
-        <div class="input">Who's buying a pizza: <input type="text"  x-model="username" placeholder="enter your name here"></div>
-        <div class="input" >There are <strong x-text="pizzas.length"></strong> pizzas to be sold</div>
-        <table>
-            <template x-for="pizza in pizzas">
-                
+    <div class="body" x-data="pizzaCartWithAPIWidget">
+        <div x-text="cartId"></div>
+        <div x-text="message"></div>
+        
+
+        <h2>Available Pizzas</h2>
+
+         <div>
+            Pizzas in the API: <strong x-text="pizzas.length"></strong>
+        </div>
+
+        <div>
+            Name of customer: <input type="text" x-model="username" placeholder="enter your name">
+        </div>
+
+        
+
+        <div x-show="cart.total.toFixed(2)>0" class="cart">
+            <table>
+                <tr>
+                    <td colspan="5">
+                        <div class="Cart1">
+                            <h2> Cart</h2>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Flavour</th>
+                    <th>Size</th>
+                    <th>Add/Remove Order</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+
+                <template x-for="pizza in cart.pizzas">
                     <tr>
                         <td x-text="pizza.flavour"></td>
                         <td x-text="pizza.size"></td>
+                        <td><button x-on:click="add(pizza)">+</button>
+                            <button x-on:click="remove(pizza)">-</button>
+                        </td>
+                        <td x-text="pizza.qty"></td>
+                        <td x-text="pizza.total.toFixed(2)"></td>
+                    </tr>
+
+                </template>
+
+                <tr>
+                    <td colspan="4">Total</td>
+                    <td>
+                        R<span x-text="cart.total.toFixed(2)"></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="4">
+                        <div x-show="payNow">
+                            <div class="b1">
+                                <div>
+                                    <label for="">Input Amount</label>
+                                    <input class="input" type="number" placeholder="Pay Amount" x-model="paymentAmount">
+                                </div>
+                                    <button x-on:click="pay" class="btn">Pay</button>
+                                
+
+                            </div>
+
+                            <div>
+                                 Message
+                                <input class="input" type="text" x-model="paymentMessage">
+                            </div>
+
+                        </div>
+
+                    <td>
+                        <button x-show="!payNow" x-on:click="payNow=true" class="btn5">Check out
+                        </button>
+                    </td>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+
+
+
+
+        <div class="table2">
+            <table>
+                <template x-for="pizza in pizzas">
+
+                    <tr>
+                        <td>
+                            <img x-bind:src="createImage(pizza)" height="100" alt="">
+                        </td>
+                        <td x-text="pizza.flavour"></td>
+                        <td x-text="pizza.size"></td>
                         <td x-text="pizza.price"></td>
-                        <td><button x-on:click="add(pizza)">Buy</button></td>
-                    </tr> 
-                
-            </template>
-        </table>
+                        <td>
+                            <button x-on:click="add(pizza)">
+                                Buy</button>
+                        </td>
+                    </tr>
+                </template>
+            </table>
+        </div>
+
     </div>
+
+    </div>
+
 </body>
+
 </html>
+
